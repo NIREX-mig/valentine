@@ -1,16 +1,25 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export default function Home() {
   const [noCount, setNoCount] = useState(0);
   const [yesPressed, setYesPressed] = useState(false);
+
   const yesButtonSize = noCount * 20 + 16;
+
+  const ref = useRef();
 
   const handleNoClick = () => {
     setNoCount(noCount + 1);
   };
+
+  useEffect(() => {
+    if (yesPressed) {
+      ref.current.play();
+    }
+  }, [ref, yesPressed]);
 
   const getNoButtonText = () => {
     const phrases = [
@@ -34,6 +43,10 @@ export default function Home() {
 
     return phrases[Math.min(noCount, phrases.length - 1)];
   };
+
+  const handlesong = () => {
+    ref.current.pause();
+  }
   return (
     <div className="flex justify-center items-center h-screen p-5">
       {yesPressed ? (
@@ -45,7 +58,12 @@ export default function Home() {
             width={100}
             height={100}
           />
+          <audio src="/satranga.mp3" ref={ref} />
           <div className="text-4xl font-bold my-4">Ok yay!!!</div>
+          <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mr-4"
+          onClick={handlesong}>
+            stop song
+          </button>
         </div>
       ) : (
         <div className="flex flex-col justify-center items-center w-[95%]">
@@ -56,7 +74,9 @@ export default function Home() {
             width={100}
             height={100}
           />
-          <h1 className="lg:text-4xl text-xl my-4">Will you be my Valentine?</h1>
+          <h1 className="lg:text-4xl text-xl my-4">
+            Will you be my Valentine?
+          </h1>
           <div>
             <button
               className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mr-4"
